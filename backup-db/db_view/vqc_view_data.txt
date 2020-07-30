@@ -1,0 +1,47 @@
+SELECT
+lab_item_master.lab_item_name,
+lab_item_master.id_lab_item,
+qc_order_detail.result,
+lab_item_master.lab_item_unit,
+qc_order_detail.`comment`,
+profile_qc_item_detail.mean,
+profile_qc_item_detail.sd,
+qc_order_main.qc_test_date,
+qc_order_main.qc_test_time,
+qc_order_detail.id_qc_profile_order_detail,
+qc_order_detail.id_qc_profile_order,
+profile_qc_master.id_qc_name,
+profile_qc_master.id_qc_level,
+profile_qc_master.lot_number,
+qc_order_main.id_user_qc,
+profile_qc_master.id_hospital,
+profile_qc_master.stdel,
+user_master.prefix_name,
+user_master.fname,
+user_master.lastname,
+qc_order_detail.id_username,
+(profile_qc_item_detail.mean+profile_qc_item_detail.sd+profile_qc_item_detail.sd) AS `P2SD`,
+(profile_qc_item_detail.mean+profile_qc_item_detail.sd) AS `P1SD`,
+(profile_qc_item_detail.mean-profile_qc_item_detail.sd) AS `N1SD`,
+(profile_qc_item_detail.mean-profile_qc_item_detail.sd-profile_qc_item_detail.sd) AS `N2SD`,
+(profile_qc_item_detail.mean-profile_qc_item_detail.sd-profile_qc_item_detail.sd-profile_qc_item_detail.sd) AS `N3SD`,
+(profile_qc_item_detail.mean+profile_qc_item_detail.sd+profile_qc_item_detail.sd+profile_qc_item_detail.sd) AS `P3SD`,
+(
+		CASE
+		WHEN (
+			qc_order_detail.analyzer = 0
+		) THEN
+			_utf8 'KEY IN'
+		ELSE
+			_utf8 'MACHINE'
+		END
+	) AS `analyzer`
+
+
+FROM
+qc_order_detail
+LEFT JOIN qc_order_main ON qc_order_detail.id_qc_profile_order = qc_order_main.id_qc_profile_order
+LEFT JOIN profile_qc_master ON profile_qc_master.id_profile_qc = qc_order_main.id_qc_profile_main
+LEFT JOIN profile_qc_item_detail ON profile_qc_item_detail.id_item_qc = qc_order_detail.id_item_qc
+LEFT JOIN lab_item_master ON lab_item_master.id_lab_item = profile_qc_item_detail.id_item_qc
+LEFT JOIN user_master ON user_master.id_user = qc_order_detail.id_username 

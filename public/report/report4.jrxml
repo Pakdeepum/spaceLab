@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report7" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8895e0bb-78cb-42e2-bc90-ad56e6d0a660">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
+	<parameter name="datestart" class="java.lang.String"/>
+	<parameter name="dateend" class="java.lang.String"/>
+	<parameter name="hospital" class="java.lang.String"/>
+	<parameter name="visit" class="java.lang.String"/>
+	<parameter name="visitCause" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{visit}.equals( "" )? " 1=1" : " pm.patient_type = "+ $P{visit}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select CONCAT(DATE_FORMAT(om.order_date,"%d/%m/%Y"),' ',TIME(om.order_date)) as requestTime,
+CONCAT(DATE_FORMAT(om.receive_date,"%d/%m/%Y"),' ', TIME(om.receive_date)) as receiveTime,
+CONCAT(DATE_FORMAT(od.process_date,"%d/%m/%Y"),' ',TIME(od.process_date)) as analyzeTime,
+CONCAT(DATE_FORMAT(od.report_date,"%d/%m/%Y"),' ',TIME(od.report_date)) as resultTime,
+CONCAT(DATE_FORMAT(od.report_date,"%d/%m/%Y"),' ',TIME(od.report_date)) as reportTime,
+CONCAT(DATE_FORMAT(od.approve_date,"%d/%m/%Y"),' ',TIME(od.approve_date)) as approvedTime ,
+TIME_FORMAT(abs(TIMEDIFF(om.receive_date,om.order_date)),"%H:%i:%s") as avgReq,
+TIME_FORMAT(abs(TIMEDIFF(om.receive_date,om.receive_date)),"%H:%i:%s") as avgRev,
+TIME_FORMAT(abs(TIMEDIFF(od.process_date,om.receive_date)),"%H:%i:%s") as avgAna,
+TIME_FORMAT(abs(TIMEDIFF(od.report_date,od.process_date)),"%H:%i:%s") as avgRes,
+TIME_FORMAT(abs(TIMEDIFF(od.report_date,od.report_date)),"%H:%i:%s") as avgRep,
+(case when TIMEDIFF(od.approve_date,od.report_date)>= '24:00:00' then Concat(FLOOR(HOUR(TIMEDIFF(od.approve_date,od.report_date)) / 24),':',MOD(HOUR(TIMEDIFF(od.approve_date,od.report_date)), 24),':',MINUTE(TIMEDIFF(od.approve_date,od.report_date)),':',SECOND(TIMEDIFF(od.approve_date,od.report_date))) else TIMEDIFF(od.approve_date,od.report_date) end) as avgApp,
+(case when TIMEDIFF(od.approve_date,om.receive_date)>='24:00:00' then Concat(FLOOR(HOUR(TIMEDIFF(od.approve_date,om.receive_date)) / 24),':',MOD(HOUR(TIMEDIFF(od.approve_date,om.receive_date)), 24),':',MINUTE(TIMEDIFF(od.approve_date,om.receive_date)),':',SECOND(TIMEDIFF(od.approve_date,om.receive_date))) else TIMEDIFF(od.approve_date,om.receive_date) end) as labTime,
+(case when TIMEDIFF(od.approve_date,om.order_date)>='24:00:00'  then Concat(FLOOR(HOUR(TIMEDIFF(od.approve_date,om.order_date)) / 24),':',MOD(HOUR(TIMEDIFF(od.approve_date,om.order_date)), 24),':',MINUTE(TIMEDIFF(od.approve_date,om.order_date)),':',SECOND(TIMEDIFF(od.approve_date,om.order_date))) else TIMEDIFF(od.approve_date,om.order_date)  end) as hospitalTime, sublm.lab_sub_group_name as department,
+om.lab_order_no as requestNo, pm.hn, lm.lab_item_name as itemName, CONCAT(pnm.prefix_name,' ',pm.patient_firstname,' ',pm.patient_lastname) as patientName, (case when $P{visit} != "" then pt.patient_type_name else "Total" end) as visit from lab_order_main om
+inner join lab_order_detail od on od.id_lab_order_main = om.id_lab_order_main
+inner join lab_item_master lm on lm.id_lab_item = od.id_lab_item
+inner join hospital_master hm on hm.id_hospital = om.id_hospital
+inner join patient_master pm on pm.id_patient = om.id_patient
+inner join prefix_name_master pnm on pnm.id_prefix = pm.prefix_name
+inner join department_master dm on dm.id_department = om.id_department
+inner join lab_sub_group_item_master sublm on sublm.id_lab_sub_group_item = lm.id_lab_item_sub_group
+inner join patient_type pt on pt.id_patient_type = pm.patient_type
+where od.approve_date != "null"
+and $P!{visitCause} and hm.id_hospital = $P{hospital}
+and date(om.order_date) >= $P{datestart} and date(om.order_date) <= $P{dateend}
+order by om.lab_order_no asc]]>
+	</queryString>
+	<field name="department" class="java.lang.String"/>
+	<field name="visit" class="java.lang.String"/>
+	<field name="requestNo" class="java.lang.String"/>
+	<field name="hn" class="java.lang.String"/>
+	<field name="patientName" class="java.lang.String"/>
+	<field name="itemName" class="java.lang.String"/>
+	<field name="requestTime" class="java.lang.String"/>
+	<field name="receiveTime" class="java.lang.String"/>
+	<field name="analyzeTime" class="java.lang.String"/>
+	<field name="resultTime" class="java.lang.String"/>
+	<field name="reportTime" class="java.lang.String"/>
+	<field name="approvedTime" class="java.lang.String"/>
+	<field name="labTime" class="java.lang.String"/>
+	<field name="hospitalTime" class="java.lang.String"/>
+	<field name="avgReq" class="java.lang.String"/>
+	<field name="avgRev" class="java.lang.String"/>
+	<field name="avgAna" class="java.lang.String"/>
+	<field name="avgRes" class="java.lang.String"/>
+	<field name="avgRep" class="java.lang.String"/>
+	<field name="avgApp" class="java.lang.String"/>
+	<variable name="totalRequest" class="java.lang.String" resetType="Group" resetGroup="requestNo" incrementType="Group" incrementGroup="requestNo" calculation="Average">
+		<variableExpression><![CDATA[$F{avgReq}]]></variableExpression>
+	</variable>
+	<variable name="totalCheckIn" class="java.lang.String"/>
+	<variable name="totalReceive" class="java.lang.String" resetType="Group" resetGroup="requestNo" incrementType="Group" incrementGroup="requestNo" calculation="Average">
+		<variableExpression><![CDATA[$F{avgRev}]]></variableExpression>
+	</variable>
+	<variable name="totalAnalyse" class="java.lang.String" resetType="Group" resetGroup="requestNo" incrementType="Group" incrementGroup="requestNo" calculation="Average">
+		<variableExpression><![CDATA[$F{avgAna}]]></variableExpression>
+	</variable>
+	<variable name="totalResult" class="java.lang.String" resetType="Group" resetGroup="requestNo" incrementType="Group" incrementGroup="requestNo" calculation="Average">
+		<variableExpression><![CDATA[$F{avgRes}]]></variableExpression>
+	</variable>
+	<variable name="totalReport" class="java.lang.String" resetType="Group" resetGroup="requestNo" incrementType="Group" incrementGroup="requestNo" calculation="Average">
+		<variableExpression><![CDATA[$F{avgRep}]]></variableExpression>
+	</variable>
+	<variable name="totalApprove" class="java.lang.String" resetType="Group" resetGroup="requestNo" incrementType="Group" incrementGroup="requestNo" calculation="Average">
+		<variableExpression><![CDATA[$F{avgApp}]]></variableExpression>
+	</variable>
+	<variable name="totalLab" class="java.lang.String" resetType="Group" resetGroup="requestNo" incrementType="Group" incrementGroup="requestNo" calculation="Average">
+		<variableExpression><![CDATA[$F{labTime}]]></variableExpression>
+	</variable>
+	<variable name="totalHospital" class="java.lang.String" resetType="Group" resetGroup="requestNo" incrementType="Group" incrementGroup="requestNo" calculation="Average">
+		<variableExpression><![CDATA[$F{hospitalTime}]]></variableExpression>
+	</variable>
+	<group name="department">
+		<groupExpression><![CDATA[$F{department}]]></groupExpression>
+		<groupHeader>
+			<band height="23">
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="1" width="802" height="20" uuid="5e8f1920-3c67-4304-87a6-beb4884f5393"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Department : " + $F{department}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="requestNo">
+		<groupExpression><![CDATA[$F{requestNo}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="1" width="181" height="20" uuid="169cbab9-3788-459a-a050-86601e6f6a9b"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Request No. : " + $F{requestNo}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="1" width="124" height="20" uuid="aac57e8e-db4a-42d8-9f49-356ebb92ff24"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA["HN : " +$F{hn}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="305" y="1" width="497" height="20" uuid="73786535-fbf1-40c4-aa58-90ba5714f1e5"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Patient Name : "+$F{patientName}]]></textFieldExpression>
+				</textField>
+			</band>
+			<band height="23">
+				<line>
+					<reportElement x="1" y="2" width="801" height="1" uuid="f21e11f1-8b2b-4038-b2b7-e6ae8949ba73"/>
+					<graphicElement>
+						<pen lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="1" y="21" width="801" height="1" uuid="a836995f-b8ce-4afa-9360-ade0527e9a18"/>
+				</line>
+				<staticText>
+					<reportElement x="0" y="2" width="101" height="20" uuid="9a62045c-b6fa-4141-877f-bdde68235afc"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[Test]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="101" y="3" width="80" height="20" uuid="cc8911e5-5c1d-450f-8005-8545f171b7dc"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[Request Time]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="181" y="3" width="80" height="20" uuid="e5ea6c14-1149-4244-9264-56d1e78f7fe1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[Check-In Time]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="261" y="2" width="80" height="20" uuid="56c14f23-15b2-46a1-a064-bfb060ee2132"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[Receive Time]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="342" y="2" width="80" height="20" uuid="8fd60faf-d3fd-4ba0-9cf7-5d826507be55"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[Analyse Time]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="422" y="2" width="80" height="20" uuid="45f3ebb8-c3e5-47f2-832e-ac1d2b22867a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[Result Time]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="502" y="2" width="80" height="20" uuid="5050618d-2e81-4697-8468-dc11344ca07d"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Report Time]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="582" y="2" width="80" height="20" uuid="1ef82572-50cc-4522-96bc-1a067917cd35"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[Approved Time]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="662" y="1" width="70" height="20" uuid="537c02ec-46cc-4f4a-a360-a79f4dbc7972"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[Lab Time]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="732" y="2" width="70" height="20" uuid="1de381f0-a1e1-4334-97ae-6e1bd6b11e88"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+					</textElement>
+					<text><![CDATA[Hospital Time]]></text>
+				</staticText>
+				<line>
+					<reportElement x="1" y="0" width="801" height="1" uuid="48a41fe1-99f6-467d-bc54-47d74ad2f905"/>
+					<graphicElement>
+						<pen lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="23">
+				<line>
+					<reportElement x="1" y="20" width="801" height="1" uuid="db15a073-1b51-46a9-82a1-59aae1a52120"/>
+					<graphicElement>
+						<pen lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="1" y="1" width="801" height="1" uuid="aeaa39f9-41bf-4cd8-b782-7eededcbce37"/>
+				</line>
+				<staticText>
+					<reportElement x="1" y="2" width="100" height="20" uuid="af3ef541-ab0d-4a2c-a860-5522539ec5a1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Average time per patient]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="181" y="1" width="80" height="20" uuid="21d123d3-1ef0-416e-bc31-203f1b054fa0"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalRequest}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="342" y="1" width="80" height="20" uuid="53f703b6-162a-49ef-b526-648b13294a32"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalAnalyse}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="422" y="1" width="80" height="20" uuid="cae8d811-01ab-4428-9afb-e7faca4ce705"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalResult}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="502" y="1" width="80" height="20" uuid="c21db265-fbfd-4e91-9d1d-ebc40a788600"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalReport}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="582" y="1" width="80" height="20" uuid="6616685f-9405-4492-846b-72ba3d7d4d74"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalApprove}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="662" y="2" width="70" height="20" uuid="4a44cb76-ec78-4a89-83f9-e6ee7fee4c59"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalLab}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="732" y="2" width="70" height="20" uuid="6ac64e4d-f56e-4319-899f-c14613e9b035"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalHospital}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="261" y="1" width="80" height="20" uuid="a18856d8-3c4f-405a-824e-04cdb9cab98e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalReceive}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="1" y="22" width="801" height="1" uuid="68c653fa-717a-450a-ab52-02f798bc611d"/>
+					<graphicElement>
+						<pen lineStyle="Solid"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<pageHeader>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="26" uuid="9e1c4fd8-4a3d-43b1-aba3-e1a477b4d08e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="16" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Autopsy Department]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="26" width="802" height="20" uuid="5bb8f432-0cca-40d1-b605-c08ad9dcc0ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Patient Waiting Time Report Per Receive Service  Visit Type : " + ($F{visit}.equals("???????") ? "Total":$F{visit})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="759" y="1" width="43" height="24" uuid="71d28e9a-b134-4ea0-a110-74b0d94647f0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true" isItalic="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="1" width="802" height="20" uuid="71b73289-c181-4092-adf7-e2d085cd865a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="13" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["From " + $P{datestart} + "  To  " +$P{dateend}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="0" y="1" width="101" height="20" uuid="c7ec63e6-e433-4f8d-82a7-27119543c584"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{itemName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="101" y="1" width="80" height="20" uuid="761970dc-f4f4-49b7-ac89-a314d30da3a9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{requestTime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="342" y="1" width="80" height="20" uuid="b2791b1b-d9e0-425b-a54e-96899557a5ad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{analyzeTime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="422" y="1" width="80" height="20" uuid="5cad8e3d-399f-4510-b30c-b889479ced0d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{resultTime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="502" y="1" width="80" height="20" uuid="4cc1d7f3-268b-474a-91ef-2d94dc397371"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reportTime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="582" y="1" width="80" height="20" uuid="312f9bd6-1597-4f23-ae50-b2a27f57d584"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{approvedTime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="662" y="1" width="70" height="20" uuid="08deda2b-07bc-47bd-97b8-5d424026efb9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{labTime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="732" y="1" width="70" height="20" uuid="5f590700-2221-4005-85f4-f772ddfab547"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hospitalTime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="261" y="1" width="80" height="20" uuid="7a5b3e31-c9fe-4e20-9881-cd9a13555f14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveTime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="181" y="1" width="80" height="20" uuid="1e26bd8c-1b0a-4ec0-a615-f49870ef000f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receiveTime}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

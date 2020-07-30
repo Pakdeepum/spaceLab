@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="labresult" pageWidth="595" pageHeight="420" whenNoDataType="AllSectionsNoDetail" columnWidth="535" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="66067053-65a6-41d3-a8ca-687a179e650d">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="4"/>
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
+	<parameter name="iD" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select hn,prefix_name_master_report,fname_report,vlab.prefix_name_master_approve,vlab.fname_approve,vlab.lastname_approve,vlab.lastname_report,vlab.prefix_name_patient, vlab.patient_firstname, vlab.patient_lastname, gender,age,DATE_FORMAT(report_date,"%d/%m/%Y") as report_date ,hospital_name,vlab.lab_order_no,lab_item_name,FORMAT(ROUND(lab_result, CAST(vlab._decimal as UNSIGNED)), vlab._decimal) as lab_result,lab_flag_cal,lab_normal_value,lab_item_unit,note , critical.reciver_name, critical.report_name, critical.department , critical.cause
+from vlab_order_detail vlab
+inner join lab_order_main labOrder on vlab.id_lab_order_main = labOrder.id_lab_order_main
+left join critical on vlab.id_lab_order_main = critical.order_main_id
+where vlab.id_lab_order_main IN($P!{iD}) ORDER BY vlab.ordered]]>
+	</queryString>
+	<field name="prefix_name_master_report" class="java.lang.String"/>
+	<field name="fname_report" class="java.lang.String"/>
+	<field name="prefix_name_master_approve" class="java.lang.String"/>
+	<field name="fname_approve" class="java.lang.String"/>
+	<field name="lastname_approve" class="java.lang.String"/>
+	<field name="lastname_report" class="java.lang.String"/>
+	<field name="prefix_name_patient" class="java.lang.String"/>
+	<field name="patient_firstname" class="java.lang.String"/>
+	<field name="patient_lastname" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="age" class="java.lang.String"/>
+	<field name="report_date" class="java.lang.String"/>
+	<field name="hospital_name" class="java.lang.String"/>
+	<field name="lab_order_no" class="java.lang.String"/>
+	<field name="lab_item_name" class="java.lang.String"/>
+	<field name="lab_result" class="java.lang.String"/>
+	<field name="lab_flag_cal" class="java.lang.String"/>
+	<field name="lab_normal_value" class="java.lang.String"/>
+	<field name="lab_item_unit" class="java.lang.String"/>
+	<field name="note" class="java.lang.String"/>
+	<field name="reciver_name" class="java.lang.String"/>
+	<field name="report_name" class="java.lang.String"/>
+	<field name="department" class="java.lang.String"/>
+	<field name="cause" class="java.lang.String"/>
+	<field name="hn" class="java.lang.String"/>
+	<group name="labResult" isStartNewPage="true" isResetPageNumber="true" isReprintHeaderOnEachPage="true" footerPosition="ForceAtBottom" keepTogether="true">
+		<groupExpression><![CDATA[$F{lab_order_no}]]></groupExpression>
+		<groupHeader>
+			<band height="117">
+				<frame>
+					<reportElement x="0" y="0" width="535" height="81" uuid="75ff00c8-e88f-41e7-9947-f2bc63fbd524"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<line>
+						<reportElement x="85" y="0" width="1" height="80" uuid="22bc7f74-f7c2-43a9-b74c-b70ae5087906"/>
+					</line>
+					<rectangle>
+						<reportElement x="447" y="3" width="85" height="75" uuid="e18f006d-c28a-4688-8ff4-8eba540b3eb9"/>
+					</rectangle>
+					<textField isBlankWhenNull="true">
+						<reportElement x="136" y="2" width="60" height="15" uuid="37cdc47b-c5f9-4289-b4bb-9b5b1c375015"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{hn}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="86" y="2" width="50" height="15" uuid="1566e596-67f1-49e8-8fc2-8854c7a57030"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="10"/>
+						</textElement>
+						<text><![CDATA[HN :]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="86" y="17" width="50" height="15" uuid="bdbc970d-59bb-4f2e-ad1e-94a697417a91"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="10"/>
+						</textElement>
+						<text><![CDATA[Sex :]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="86" y="32" width="50" height="15" uuid="98b42700-b38e-4146-8d74-25c7d175b98f"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="10"/>
+						</textElement>
+						<text><![CDATA[Hospital :]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="86" y="50" width="184" height="15" uuid="939853af-4c3e-4d1b-beb7-ab2db74d18f6"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="10"/>
+						</textElement>
+						<text><![CDATA[AMS Clinical Service Center]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="86" y="65" width="63" height="15" uuid="cf3cb697-cccf-4f9a-96df-e407d9a43275"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="10"/>
+						</textElement>
+						<text><![CDATA[Note: ]]></text>
+					</staticText>
+					<line>
+						<reportElement x="88" y="48" width="356" height="1" uuid="c5eb95d9-b477-4dbc-94e8-507ec0231496"/>
+					</line>
+					<textField isBlankWhenNull="true">
+						<reportElement x="136" y="17" width="60" height="15" uuid="115fd3ba-04ef-4904-9b21-718689490815"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{gender}]]></textFieldExpression>
+					</textField>
+					<textField isBlankWhenNull="true">
+						<reportElement x="136" y="32" width="308" height="15" uuid="02d3f1f4-9ddf-4188-b44a-04042b34e439"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{hospital_name}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="196" y="17" width="50" height="15" uuid="339ad962-8c7e-4930-ae01-18443bc590c6"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="10"/>
+						</textElement>
+						<text><![CDATA[Age :]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="196" y="2" width="50" height="15" uuid="41858cec-da2b-44de-9567-173a3c77b26f"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="10"/>
+						</textElement>
+						<text><![CDATA[Name :]]></text>
+					</staticText>
+					<textField isBlankWhenNull="true">
+						<reportElement x="246" y="2" width="60" height="15" uuid="a9d13b68-5d66-4c0b-9009-cd589b14a3e6"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{prefix_name_patient} +" "+$F{patient_firstname}+" "+$F{patient_lastname}]]></textFieldExpression>
+					</textField>
+					<textField isBlankWhenNull="true">
+						<reportElement x="246" y="17" width="60" height="15" uuid="fd870623-6a4d-4f9b-874d-d655afc8ddca"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{gender}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="306" y="2" width="70" height="30" uuid="b4b9722c-7389-4f7d-9fb3-407680e3f2e0"/>
+						<textElement verticalAlignment="Middle">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="10"/>
+						</textElement>
+						<text><![CDATA[Request Date:]]></text>
+					</staticText>
+					<textField isBlankWhenNull="true">
+						<reportElement x="376" y="2" width="68" height="30" uuid="58dff861-b20e-41f0-a7f4-aedabbe6aa9f"/>
+						<textElement verticalAlignment="Middle">
+							<font fontName="TH Sarabun New" size="11" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{report_date}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<staticText>
+					<reportElement x="0" y="82" width="50" height="15" uuid="81da08bf-b603-47aa-a254-10cd4e65e873"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						<paragraph leftIndent="10"/>
+					</textElement>
+					<text><![CDATA[Lab No. : ]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="50" y="82" width="485" height="15" uuid="774df901-b8f3-4a29-9555-65cbe97ad8aa"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="11" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{lab_order_no}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="29" y="97" width="80" height="20" uuid="19bb7373-87a2-44b3-a1b0-535818bdbc2f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="13" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Lab Test]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="109" y="97" width="80" height="20" uuid="42d15267-4ee1-4c6b-87e1-3587d14a79b0"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="13" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[RESULT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="189" y="97" width="80" height="20" uuid="d5bf061a-4326-4488-83ac-bc09c924d8c3"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="13" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Classified]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="269" y="97" width="80" height="20" uuid="e4f21ba6-ca26-49d8-97a9-4c909723bab5"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="13" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Reference range]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="349" y="97" width="80" height="20" uuid="0cf5b647-60e0-4560-93d7-664105aa12f1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="13" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[UNIT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="429" y="97" width="80" height="20" uuid="6823b3c8-e251-4aa1-83f6-0b292dc2db84"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="13" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Comment]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="115" width="535" height="1" uuid="24e58961-42b8-4757-9d52-bb62d358472d"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="63">
+				<frame>
+					<reportElement x="0" y="0" width="535" height="16" uuid="8f1a07d3-e083-4cd7-93d9-314bc0cce4e8">
+						<printWhenExpression><![CDATA[!$F{reciver_name}.equals( "" )]]></printWhenExpression>
+					</reportElement>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement x="70" y="0" width="60" height="15" isPrintWhenDetailOverflows="true" uuid="ef8f8549-7c7e-4e20-b62c-a22786c3967c"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{reciver_name}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="0" y="0" width="70" height="15" uuid="dc95ad11-e182-417d-b9fa-7575ec12703d"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="5"/>
+						</textElement>
+						<text><![CDATA[Critical Recipient :]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="130" y="0" width="70" height="15" uuid="6cea25fd-b915-484f-b036-43d29cb6163f"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="5"/>
+						</textElement>
+						<text><![CDATA[Critical Reporter :]]></text>
+					</staticText>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement x="200" y="0" width="60" height="15" isPrintWhenDetailOverflows="true" uuid="c56f5b94-ece2-439c-b688-f295e7f1c7c9"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{report_name}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="393" y="0" width="50" height="15" uuid="434105ee-ddf0-4826-b0d5-4ffe9d1e94c3"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="5"/>
+						</textElement>
+						<text><![CDATA[Cause : ]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="260" y="0" width="73" height="15" uuid="5be7ecfe-1be5-42ee-96d0-1834c757cceb"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="5"/>
+						</textElement>
+						<text><![CDATA[Notified Department : ]]></text>
+					</staticText>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement x="443" y="0" width="92" height="15" isPrintWhenDetailOverflows="true" uuid="aa58ff2c-dd88-46f4-bc0f-901ca1405263"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{cause}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement x="333" y="0" width="60" height="15" isPrintWhenDetailOverflows="true" uuid="cbfb75d8-6f0c-4ac8-a801-a36b1198b6c3"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{department}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<frame>
+					<reportElement x="0" y="16" width="535" height="16" uuid="5ec4f1be-ec31-4e3f-ab39-05de7a581b64"/>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+					</box>
+					<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
+						<reportElement x="449" y="1" width="60" height="15" isPrintWhenDetailOverflows="true" uuid="8369ce13-88ba-49cf-99d0-edec5070c895"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement x="170" y="1" width="70" height="15" uuid="6b3fea27-108f-4cc3-98c8-cb9230552cde"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="5"/>
+						</textElement>
+						<text><![CDATA[Approved By:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="376" y="1" width="73" height="15" uuid="dbb16732-52b6-4862-a590-ecb9a6ee5393"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="5"/>
+						</textElement>
+						<text><![CDATA[Printed Date:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement x="0" y="1" width="70" height="15" uuid="58134136-c305-4562-abfa-3f6c9ad1d4e3"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+							<paragraph leftIndent="5"/>
+						</textElement>
+						<text><![CDATA[Reported By: ]]></text>
+					</staticText>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement x="240" y="1" width="136" height="15" isPrintWhenDetailOverflows="true" uuid="ed93772a-bfa0-46b5-b542-3e96f4efb260"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{prefix_name_master_approve} + " "+$F{fname_approve} + " "+$F{lastname_approve}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+						<reportElement x="70" y="1" width="100" height="15" isPrintWhenDetailOverflows="true" uuid="00d54a23-69fe-473a-b8ec-37eef4897453"/>
+						<textElement verticalAlignment="Top">
+							<font fontName="TH Sarabun New" size="11" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{prefix_name_master_report} + " " +$F{fname_report} + " "+$F{lastname_report}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<staticText>
+					<reportElement x="0" y="47" width="535" height="15" isPrintWhenDetailOverflows="true" uuid="352c8941-d8ba-4f9a-a517-321a92667c26"/>
+					<textElement>
+						<font fontName="TH Sarabun New" size="10" isBold="true" isStrikeThrough="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Note: Items marked with * at the end refer to items list within the scope of standard certification ISO 15189:2012]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="32" width="535" height="15" isPrintWhenDetailOverflows="true" uuid="173280b2-7e02-42d4-bb4a-820ca8953153"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="TH Sarabun New" size="10" isBold="true" isStrikeThrough="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Note: Items marked with " refer to items list that are forwarded outside. Remark : L =Low,H,Higth ,R=Repeated,CL=Critical Low,CH= Critical High,W=Warning  SD-F-MT-12]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="29" y="0" width="80" height="15" uuid="217393fa-4064-485d-8771-1a3ec5cd5389"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lab_item_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="109" y="0" width="80" height="15" uuid="13e649ce-593e-4561-8217-5d8d410b1e48"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lab_result}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="189" y="0" width="80" height="15" uuid="a22288f7-fd72-4b71-94f7-9b2c7e688f41"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lab_flag_cal}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="269" y="0" width="80" height="15" uuid="8b5c8a65-38b8-43f5-91d7-cd15f1bfc3b7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lab_normal_value}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="349" y="0" width="80" height="15" uuid="b1a1c41c-75f5-4be7-b380-2ad7f7a5e144"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lab_item_unit}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="429" y="0" width="80" height="15" uuid="15ed7e26-cce4-43fc-a051-c325c1ed4c03"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{note}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

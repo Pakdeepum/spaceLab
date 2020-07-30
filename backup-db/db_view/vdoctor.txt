@@ -1,0 +1,19 @@
+SELECT
+doctor_master.id_doctor AS id_doctor,
+doctor_master.doctor_prefix AS doctor_prefix,
+doctor_master.doctor_name AS doctor_name,
+doctor_master.doctor_lastname AS doctor_lastname,
+doctor_master.doctor_department AS doctor_department,
+doctor_master.doctor_position AS doctor_position,
+doctor_master.doctor_tel AS doctor_tel,
+doctor_master.stdel AS stdel,
+doctor_master.doctor_specialty AS doctor_specialty,
+prefix_name_master.prefix_name AS prefix_name,
+department_master.department_name AS department_name,
+specialty_master.specialty_name AS specialty_name,
+doctor_master.id_hospital
+FROM
+(((doctor_master
+JOIN prefix_name_master ON ((prefix_name_master.id_prefix = doctor_master.doctor_prefix)))
+JOIN department_master ON ((department_master.id_department = doctor_master.doctor_department)))
+JOIN specialty_master ON ((specialty_master.id_specialty = doctor_master.doctor_specialty))) 

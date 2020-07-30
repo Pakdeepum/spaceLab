@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PatientDaily" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="63f6aebd-9c7d-4ea0-8bee-f23996dbf955">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
+	<import value="net.sf.jasperreports.engine.data.JsonDataSource"/>
+	<parameter name="fromDate" class="java.util.Date"/>
+	<parameter name="toDate" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[select patient.hn as hn, orders.lab_order_no as labNo , patient.patient_firstname as patient_firstname, patient.patient_lastname, prefix.prefix_name as prefix_name ,
+orders.receive_date, reOrder.specimen_item_reject_date as reject_date,
+GROUP_CONCAT(noteMaster.specimen_item_reject_note) as  details,
+CONCAT(preReject.prefix_name, user_master.fname, ' ', user_master.lastname) as name_reject
+from lab_order_main orders
+left join specimen_item_reject_order reOrder on orders.id_lab_order_main = reOrder.id_specimen_item
+left join specimen_item_reject_note_master noteMaster on reOrder.id_specimen_item_reject_note = noteMaster.id_specimen_item_reject_note
+inner join patient_master patient on patient.id_patient = orders.id_patient
+inner join prefix_name_master prefix on prefix.id_prefix = patient.prefix_name
+inner join user_master on orders.id_user = user_master.id_user
+left join prefix_name_master preReject on reOrder.id_username = preReject.id_prefix
+where date_format(orders.order_date,"%Y-%m-%d") between $P{fromDate} and $P{toDate}
+group by orders.id_lab_order_main
+order by patient.hn, orders.id_lab_order_main, reOrder.specimen_item_reject_date]]>
+	</queryString>
+	<field name="hn" class="java.lang.String"/>
+	<field name="patient_firstname" class="java.lang.String"/>
+	<field name="labNo" class="java.lang.String"/>
+	<field name="patient_lastname" class="java.lang.String"/>
+	<field name="prefix_name" class="java.lang.String"/>
+	<field name="details" class="java.lang.String"/>
+	<field name="receive_date" class="java.lang.String"/>
+	<field name="reject_date" class="java.lang.String"/>
+	<field name="name_reject" class="java.lang.String"/>
+	<background>
+		<band height="802" splitType="Stretch">
+			<line>
+				<reportElement x="39" y="40" width="1" height="762" uuid="116bdcc9-03b3-45c7-93ed-6226a97d4251"/>
+			</line>
+			<line>
+				<reportElement x="88" y="41" width="1" height="761" uuid="8def8e82-cbef-4cf5-858c-91188019a5e3"/>
+			</line>
+			<line>
+				<reportElement x="554" y="41" width="1" height="761" uuid="752fba1c-0411-40ba-a4da-73a2942ae638"/>
+			</line>
+			<line>
+				<reportElement x="0" y="41" width="1" height="761" uuid="f62f563f-ea6d-414d-af61-3f701742280c"/>
+			</line>
+			<line>
+				<reportElement x="0" y="801" width="554" height="1" uuid="fa77757a-0390-4546-bf8b-b44dcaaabacc"/>
+			</line>
+			<line>
+				<reportElement x="0" y="63" width="554" height="1" uuid="e2805bb0-67a3-4b28-9971-34c2da861824"/>
+			</line>
+			<line>
+				<reportElement x="1" y="40" width="554" height="1" uuid="306815e7-2587-4b6d-b70e-5cbe204261dd"/>
+			</line>
+			<line>
+				<reportElement x="187" y="40" width="1" height="762" uuid="8c3ba135-ad90-4414-a966-037c817b0ee6"/>
+			</line>
+			<line>
+				<reportElement x="275" y="40" width="1" height="762" uuid="a59444f5-ea79-4ba8-a6a2-2e44ac5ed155"/>
+			</line>
+			<line>
+				<reportElement x="361" y="41" width="1" height="760" uuid="c2b6d5be-c858-4e54-a2c9-dfb5c4ed7f1b"/>
+			</line>
+			<line>
+				<reportElement x="474" y="41" width="1" height="760" uuid="bee38a57-01ab-4a02-b442-762168f60e50"/>
+			</line>
+		</band>
+	</background>
+	<pageHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="100" y="0" width="353" height="20" uuid="7b91342a-eeb2-42b2-b14c-22142fcc8b3a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Rejecting Specimen Report]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="453" y="0" width="102" height="20" uuid="8be4f8f3-d976-42da-90ef-81d0fc238e97"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="0" y="20" width="555" height="20" uuid="f426158f-d16a-420f-be81-127972df4acd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("d MMM yy", new Locale("TH","th")).format($P{fromDate}) + " - " + new java.text.SimpleDateFormat("d MMM yy", new Locale("TH","th")).format($P{toDate})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="2" width="39" height="21" uuid="108cab02-62c5-4788-a7c0-55a332b75eb1"/>
+				<box leftPadding="0">
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[HN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="3" width="98" height="20" uuid="1514302f-d367-423d-ae55-7b69cde47389"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Name - Surname]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="2" width="49" height="21" uuid="f4f50dd4-75b2-4921-b720-5b1a99a0d441"/>
+				<box leftPadding="0">
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Lab No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="2" width="112" height="20" uuid="567342c1-8a05-4749-adb6-d9f4a2e122f3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Reason For Specimen Rejecting]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="3" width="93" height="20" uuid="ba2be979-a19a-45b0-8e81-b71ba9996c6b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Received Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="271" y="2" width="90" height="20" uuid="41e14127-2823-43bc-a82c-ab7a558dcc8a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Specimen Rejecting Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="473" y="2" width="81" height="20" uuid="1142be0b-198f-4a22-a3fd-b975d25585b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="14" isBold="true" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Specimen Rejector]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="39" height="20" uuid="8f3f3585-8edb-4b7e-8d36-0d274907357d"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{hn}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="0" width="48" height="20" uuid="4024406d-d10f-43eb-80ee-bcbf6e349d8b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" isBold="false" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{labNo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="94" y="0" width="88" height="20" uuid="a66fa09b-1bf4-4172-b00b-742ee9af0a24"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prefix_name}+$F{patient_firstname} + "  "  +$F{patient_lastname}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="187" y="0" width="88" height="20" uuid="95a8f2cd-17c2-4f40-9298-1b5b71d35f4c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{receive_date}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="371" y="0" width="97" height="20" uuid="0b92726c-d8be-492b-b341-893d4dbf898b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="480" y="0" width="70" height="20" uuid="cce53ef5-5a37-4728-ae13-3e33055f3dce"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name_reject}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="276" y="0" width="85" height="20" uuid="a5d1fa7d-8f3a-4613-bc2a-c1664f1b1f38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="TH Sarabun New" size="12" pdfFontName="fonts/THSarabunNew.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reject_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

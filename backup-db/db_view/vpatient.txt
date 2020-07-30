@@ -1,0 +1,76 @@
+SELECT SQL_NO_CACHE
+	`patient_master`.`hn` AS `hn`,
+	`patient_master`.`patient_firstname` AS `patient_firstname`,
+	`patient_master`.`patient_lastname` AS `patient_lastname`,
+	`patient_master`.`birthday` AS `birthday`,
+	`patient_master`.`patient_address` AS `patient_address`,
+	`district`.`district_name` AS `district_name`,
+	`patient_master`.`patient_amphur` AS `patient_amphur`,
+	`patient_master`.`patient_province` AS `patient_province`,
+	`patient_master`.`patient_district` AS `patient_district`,
+	`amphur`.`amphur_name` AS `amphur_name`,
+	`province`.`province_name` AS `province_name`,
+	`ethnicity_master`.`ethnicity_name` AS `ethnicity_name`,
+	`patient_master`.`patient_zipcode` AS `patient_zipcode`,
+	`patient_master`.`ethnicity` AS `ethnicity`,
+	`patient_master`.`nationality` AS `nationality`,
+	`nationality_master`.`nationality_name` AS `nationality_name`,
+	`patient_master`.`blood_group` AS `blood_group`,
+	`patient_master`.`clinic` AS `clinic`,
+	`patient_master`.`drug_allergy` AS `drug_allergy`,
+	`patient_master`.`father_name` AS `father_name`,
+	`patient_master`.`mother_name` AS `mother_name`,
+	`patient_master`.`regis_date` AS `regis_date`,
+	`patient_master`.`patient_tel` AS `patient_tel`,
+	`patient_master`.`inform_name` AS `inform_name`,
+	`patient_master`.`inform_relate` AS `inform_relate`,
+	`patient_master`.`inform_tel` AS `inform_tel`,
+	`patient_master`.`marital_status` AS `marital_status`,
+	`patient_master`.`patient_religion` AS `patient_religion`,
+	( CASE WHEN ( `patient_master`.`gender` = 1 ) THEN _utf8 'ชาย' ELSE _utf8 'หญิง' END ) AS `gender`,
+	`patient_master`.`citizenid` AS `citizenid`,
+	`patient_master`.`private_docter_id` AS `private_docter_id`,
+	`patient_master`.`patient_email` AS `patient_email`,
+	`patient_master`.`stdel` AS `stdel`,
+	`patient_master`.`last_update` AS `last_update`,
+	`patient_master`.`patient_type` AS `patient_type`,
+	`patient_master`.`weight` AS `weight`,
+	`patient_master`.`height` AS `height`,
+	`patient_master`.`id_hospital` AS `id_hospital`,
+	`patient_type`.`patient_type_name` AS `patient_type_name`,
+	`religion_master`.`religion_name` AS `religion_name`,
+	`hospital_master`.`hn_hospital` AS `hn_hospital`,
+	`hospital_master`.`hospital_name` AS `hospital_name`,
+	`prefix_name_master`.`prefix_name` AS `prefix_name`,
+	`patient_master`.`id_patient` AS `id_patient`,
+	`prefix_name_master`.`id_prefix` AS `id_prefix`,
+	floor( ( ( ( to_days( now( ) ) - to_days( `patient_master`.`birthday` ) ) / 30 ) / 12 ) ) AS `age` 
+FROM
+	(
+	(
+	(
+	(
+	(
+	(
+	(
+	(
+	(
+	( `patient_master` LEFT JOIN `province` ON ( ( `patient_master`.`patient_province` = `province`.`province_id` ) ) )
+	LEFT JOIN `district` ON ( ( `patient_master`.`patient_district` = `district`.`district_id` ) ) 
+	)
+	LEFT JOIN `amphur` ON ( ( `patient_master`.`patient_amphur` = `amphur`.`amphur_id` ) ) 
+	)
+	LEFT JOIN `ethnicity_master` ON ( ( `patient_master`.`ethnicity` = `ethnicity_master`.`id_ethnicity` ) ) 
+	)
+	LEFT JOIN `religion_master` ON ( ( `patient_master`.`patient_religion` = `religion_master`.`id_religion` ) ) 
+	)
+	LEFT JOIN `nationality_master` ON ( ( `patient_master`.`nationality` = `nationality_master`.`id_nationality` ) ) 
+	)
+	LEFT JOIN `patient_type` ON ( ( `patient_master`.`patient_type` = `patient_type`.`id_patient_type` ) ) 
+	)
+	LEFT JOIN `doctor_master` ON ( ( `patient_master`.`private_docter_id` = `doctor_master`.`id_doctor` ) ) 
+	)
+	LEFT JOIN `hospital_master` ON ( ( `patient_master`.`id_hospital` = `hospital_master`.`id_hospital` ) ) 
+	)
+	JOIN `prefix_name_master` ON ( ( `patient_master`.`prefix_name` = `prefix_name_master`.`id_prefix` ) ) 
+	) 

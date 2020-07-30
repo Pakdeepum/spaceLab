@@ -1,0 +1,16 @@
+SELECT
+specimen_item_reject_order.id_specimen_item_reject,
+specimen_item_reject_order.specimen_item_reject_date,
+specimen_item_reject_order.id_username,
+vuser_master.prefix_name,
+vuser_master.fname,
+vuser_master.lastname,
+lab_order_main.lab_order_no,
+lab_order_main.receive_date,
+specimen_item_reject_note_master.specimen_item_reject_note,
+specimen_item_reject_order.id_specimen_item
+FROM
+specimen_item_reject_order
+INNER JOIN specimen_item_reject_note_master ON specimen_item_reject_note_master.id_specimen_item_reject_note = specimen_item_reject_order.id_specimen_item_reject_note
+INNER JOIN vuser_master ON vuser_master.id_user = specimen_item_reject_order.id_username
+INNER JOIN lab_order_main ON lab_order_main.id_lab_order_main = specimen_item_reject_order.id_specimen_item 

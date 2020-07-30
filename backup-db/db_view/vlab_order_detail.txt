@@ -1,0 +1,65 @@
+SELECT
+lab_order_detail.id_lab_order_detail AS id_lab_order_detail,
+lab_order_detail.id_lab_order_main AS id_lab_order_main,
+lab_order_detail.id_lab_item AS id_lab_item,
+lab_order_detail.lab_result AS lab_result,
+lab_order_detail.lab_result_repeat AS lab_result_repeat,
+lab_order_detail.report_date AS report_date,
+lab_order_detail.report_id_user AS report_id_user,
+lab_order_detail.approve_date AS approve_date,
+lab_order_detail.approve_id_user AS approve_id_user,
+lab_order_detail.price AS price,
+lab_order_detail.discount AS discount,
+lab_order_detail.total_price AS total_price,
+lab_order_detail.id_lab_specimen_item AS id_lab_specimen_item,
+lab_order_detail.result_flag AS result_flag,
+lab_order_detail.critical_flag AS critical_flag,
+lab_order_detail.tat AS tat,
+lab_order_detail.priority AS priority,
+lab_order_detail.stdel AS stdel,
+lab_item_master.lab_item_name AS lab_item_name,
+lab_item_master.lab_item_code AS lab_item_code,
+lab_item_master.lab_item_unit AS lab_item_unit,
+lab_order_main.lab_order_no AS lab_order_no,
+lab_order_main.date_ts AS date_ts,
+lab_order_detail.`status` AS `status`,
+user_master_report.fname AS fname_report,
+user_master_report.lastname AS lastname_report,
+user_master_approve.fname AS fname_approve,
+user_master_approve.lastname AS lastname_approve,
+prefix_name_master_report.prefix_name AS prefix_name_master_report,
+prefix_name_master_approve.prefix_name AS prefix_name_master_approve,
+_utf8'' AS icon_status,
+lab_item_master.lab_normal_value,
+lab_item_master.lab_male_normal_value,
+lab_item_master.lab_female_normal_value,
+lab_item_master.lab_child_normal_value,
+lab_order_detail.normal_range,
+lab_order_main.id_patient,
+patient_master.hn,
+patient_master.patient_firstname,
+patient_master.patient_lastname,
+patient_master.prefix_name,
+patient_master.blood_group,
+patient_master.ethnicity,
+patient_master.nationality,
+patient_master.drug_allergy,
+prefix_name_master.prefix_name AS prefix_name_patient,
+( CASE WHEN ( `patient_master`.`gender` = 1 ) THEN _utf8 'ชาย' ELSE _utf8 'หญิง' END ) AS `gender`,
+floor( ( ( ( to_days( now( ) ) - to_days( `patient_master`.`birthday` ) ) / 30 ) / 12 ) ) AS `age`,
+(CASE WHEN ( `lab_order_detail`.`result_flag` = 1 ) THEN 'L' 
+WHEN ( `lab_order_detail`.`result_flag` = 2 ) THEN 'N'
+WHEN ( `lab_order_detail`.`result_flag` = 3 ) THEN 'H'ELSE '' END) AS `lab_flag_cal`,
+hospital_master.id_hospital,
+hospital_master.hospital_name
+FROM
+((((((lab_order_detail
+LEFT JOIN lab_order_main ON ((lab_order_main.id_lab_order_main = lab_order_detail.id_lab_order_main)))
+LEFT JOIN lab_item_master ON ((lab_item_master.id_lab_item = lab_order_detail.id_lab_item)))
+LEFT JOIN user_master AS user_master_report ON ((user_master_report.id_user = lab_order_detail.report_id_user)))
+LEFT JOIN user_master AS user_master_approve ON ((user_master_approve.id_user = lab_order_detail.approve_id_user)))
+LEFT JOIN prefix_name_master AS prefix_name_master_report ON ((prefix_name_master_report.id_prefix = user_master_report.prefix_name)))
+LEFT JOIN prefix_name_master AS prefix_name_master_approve ON ((prefix_name_master_approve.id_prefix = user_master_approve.prefix_name)))
+INNER JOIN patient_master ON patient_master.id_patient = lab_order_main.id_patient
+INNER JOIN prefix_name_master ON prefix_name_master.id_prefix = patient_master.prefix_name
+INNER JOIN hospital_master ON hospital_master.id_hospital = lab_item_master.id_hospital 

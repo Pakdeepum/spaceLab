@@ -1,0 +1,49 @@
+html{
+    background:url(/dependencies/img/login/login_bg.png);
+    display: block;
+    width: 100%;
+    background-size: 100%;
+    height: 702px;
+}
+body{
+    background:url(/img/login/login_bg.png);
+    display: block;
+    width: 100%;
+    background-size: 100%;
+    height: 702px;
+}
+.loginbg{
+    background:url(/img/login/login_bg.png);
+    display: block;
+    width: 100%;
+    background-size: 100%;
+    height: 702px;
+}
+
+.loginhd{
+        color: white;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 400;
+    /* font-size: 14; */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.loginbtn{
+    background-color: #da1616!important;
+    color: #fff;
+    padding: 14px 5px!important;
+    font-size: 17pt!important;
+}
+.btn-link {
+    font-weight: 600;
+    color: #898989;
+}
+.red{
+    background-color: #da1616!important;
+    border-radius: 25px 25px 0px 0px !important;
+}
+.panelbg{
+    background: rgba(253, 253, 253, 0.2)!important;
+}

@@ -1,0 +1,24 @@
+SELECT
+lab_order_main.lab_order_no,
+appointment_order_data.id_lab_order_main,
+appointment_order_data.id_appointment,
+appointment_order_data.id_doctor,
+appointment_order_data.date_order,
+appointment_order_data.date_ts,
+appointment_order_data.`status`,
+appointment_order_data.stdel,
+appointment_order_data.id_user_ts,
+appointment_order_data.appointment_for,
+appointment_order_data.note,
+doctor_master.doctor_prefix,
+doctor_master.doctor_name,
+doctor_master.doctor_lastname
+FROM
+appointment_order_data
+LEFT JOIN lab_order_main ON lab_order_main.id_lab_order_main = appointment_order_data.id_lab_order_main
+LEFT JOIN doctor_master ON doctor_master.id_doctor = appointment_order_data.id_doctor
+
+where appointment_order_data.id_appointment IN (SELECT MAX(id_appointment) AS mx
+             FROM appointment_order_data 
+             WHERE stdel=0 AND status=0
+             GROUP BY id_lab_order_main) 

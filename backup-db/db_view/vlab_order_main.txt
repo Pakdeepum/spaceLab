@@ -1,0 +1,81 @@
+SELECT SQL_NO_CACHE
+	`department_master`.`department_name` AS `department_name`,
+	`service_plan_master`.`service_plan_name` AS `service_plan_name`,
+	`clinic_master`.`clinic_name` AS `clinic_name`,
+	`patient_master`.`patient_firstname` AS `patient_firstname`,
+	`patient_master`.`patient_lastname` AS `patient_lastname`,
+	`prefix_name_master`.`prefix_name` AS `prefix_name`,
+	`lab_order_main`.`id_lab_order_main` AS `id_lab_order_main`,
+	`lab_order_main`.`lab_order_no` AS `lab_order_no`,
+	`lab_order_main`.`VN` AS `VN`,
+	`lab_order_main`.`date_ts` AS `date_ts`,
+	`lab_order_main`.`id_department` AS `id_department`,
+	`lab_order_main`.`id_service_plan` AS `id_service_plan`,
+	`lab_order_main`.`id_clinic` AS `id_clinic`,
+	`lab_order_main`.`id_patient` AS `id_patient`,
+	`lab_order_main`.`id_doctor` AS `id_doctor`,
+	`lab_order_main`.`id_sevice_point` AS `id_sevice_point`,
+	`lab_order_main`.`id_user` AS `id_user`,
+	`lab_order_main`.`temperature` AS `temperature`,
+	`lab_order_main`.`bp_low` AS `bp_low`,
+	`lab_order_main`.`bp_high` AS `bp_high`,
+	`lab_order_main`.`pulse` AS `pulse`,
+	date_format( `lab_order_main`.`order_date`, _utf8 '%d-%m-%Y' ) AS `order_date`,
+	`lab_order_main`.`order_id_user` AS `order_id_user`,
+	`lab_order_main`.`receive_date` AS `receive_date`,
+	`lab_order_main`.`receive_id_user` AS `receive_id_user`,
+	`lab_order_main`.`correct_date` AS `correct_date`,
+	`lab_order_main`.`correct_id_user` AS `correct_id_user`,
+	`lab_order_main`.`id_appointment` AS `id_appointment`,
+	`lab_order_main`.`price` AS `price`,
+	`lab_order_main`.`total_price` AS `total_price`,
+	`lab_order_main`.`discount` AS `discount`,
+	`lab_order_main`.`status` AS `status`,
+	`lab_order_main`.`stdel` AS `stdel`,
+	`lab_order_main`.`id_lab_form` AS `id_lab_form`,
+	`lab_order_main`.`id_ward` AS `id_ward`,
+	`lab_order_main`.`note` AS `note`,
+	`lab_order_main`.`id_hospital_send` AS `id_hospital_send`,
+	`lab_order_main`.`id_hospital` AS `id_hospital`,
+	`doctor_master`.`doctor_lastname` AS `doctor_lastname`,
+	`doctor_master`.`doctor_name` AS `doctor_name`,
+	`user_master`.`lastname` AS `lastname`,
+	`user_master`.`fname` AS `fname`,
+	`ward`.`ward_name` AS `ward_name`,
+	`hospital_master`.`hospital_name` AS `hospital_name`,
+	`patient_master`.`hn` AS `hn`,
+	( CASE WHEN ( `patient_master`.`gender` = 1 ) THEN _utf8 'ชาย' ELSE _utf8 'หญิง' END ) AS `gender`,
+	floor( ( ( ( to_days( now( ) ) - to_days( `patient_master`.`birthday` ) ) / 30 ) / 12 ) ) AS `age`,
+	date_format( `lab_order_main`.`order_date`, _utf8 '%H:%i:%s' ) AS `order_time`,
+	_utf8 '' AS `icon_status` ,
+	date_format(
+`patient_master`.`birthday`,
+_utf8 '%d-%m-%Y'
+) AS `birthday`,
+ABS(MONTH(birthday)-MONTH(NOW())) AS `age_month`
+FROM
+	(
+		(
+			(
+				(
+					(
+						(
+							(
+								(
+									( `lab_order_main` LEFT JOIN `department_master` ON ( ( `department_master`.`id_department` = `lab_order_main`.`id_department` ) ) )
+									LEFT JOIN `service_plan_master` ON ( ( `service_plan_master`.`id_service_plan` = `lab_order_main`.`id_service_plan` ) ) 
+								)
+								LEFT JOIN `clinic_master` ON ( ( `clinic_master`.`id_clinic` = `lab_order_main`.`id_clinic` ) ) 
+							)
+							LEFT JOIN `patient_master` ON ( ( `patient_master`.`id_patient` = `lab_order_main`.`id_patient` ) ) 
+						)
+						LEFT JOIN `prefix_name_master` ON ( ( `prefix_name_master`.`id_prefix` = `patient_master`.`prefix_name` ) ) 
+					)
+					LEFT JOIN `doctor_master` ON ( ( `doctor_master`.`id_doctor` = `lab_order_main`.`id_doctor` ) ) 
+				)
+				LEFT JOIN `user_master` ON ( ( `user_master`.`id_user` = `lab_order_main`.`id_user` ) ) 
+			)
+			LEFT JOIN `ward` ON ( ( `ward`.`id_ward` = `lab_order_main`.`id_ward` ) ) 
+		)
+	LEFT JOIN `hospital_master` ON ( ( `hospital_master`.`id_hospital` = `lab_order_main`.`id_hospital_send` ) ) 
+	) 
